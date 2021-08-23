@@ -74,19 +74,19 @@ class ACO {
 
         return solutionArray
     }
-}
 
-class Ant(private val id: String, private val generation: Int) {
-    private val aco = ACO()
-    val solutionArray = ArrayList<Solution>()
-    var complete = false
-    fun startSearch() { //개미 여행 시작
-        repeat(generation){ //generation 만큼 반복
-            val solution = aco.moveAnt()    //가중치에 따른 확률로 개미 이동
-            aco.updateGlobalPheromone(solution) //여행 마치면 페로몬 업데이트
-            solutionArray.add(solution)
+    class Ant(private val id: String, private val generation: Int) {
+        private val aco = ACO()
+        val solutionArray = ArrayList<Solution>()
+        var complete = false
+        fun startSearch() { //개미 여행 시작
+            repeat(generation){ //generation 만큼 반복
+                val solution = aco.moveAnt()    //가중치에 따른 확률로 개미 이동
+                aco.updateGlobalPheromone(solution) //여행 마치면 페로몬 업데이트
+                solutionArray.add(solution)
+            }
+            aco.evaluation(solutionArray)   //우수한 순서대로 정렬
+            complete = true
         }
-        aco.evaluation(solutionArray)   //우수한 순서대로 정렬
-        complete = true
     }
 }

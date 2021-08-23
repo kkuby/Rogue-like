@@ -1,8 +1,13 @@
 package main
-//type 0: floor, 1: wall, 2: food, 10: player, 11: enemy1, 12: enemy2, 100: exit, 112: enemy+food
+
+/**
+ * type 0: floor, 1: wall, 2: food1, 3: food2, 10: player, 11: enemy1, 12: enemy2, 100: exit, 112: enemy+food
+ */
 class GameObject(var type: Int, var x: Int, var y: Int){
     var hp = 0
     var damage = 0
+
+    constructor() : this(-1, -1, -1)
 
     constructor(gameObject: GameObject) : this(gameObject.type, gameObject.x, gameObject.y){
         hp = gameObject.hp
