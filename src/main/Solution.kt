@@ -2,6 +2,8 @@ package main
 
 class Solution(val clear: Boolean, val turn: Int, val player: GameObject, val route: List<Pair<Int, Int>>){
 
+    constructor() : this(false, 0, GameObject(-1,-1,-1), ArrayList<Pair<Int, Int>>())
+
     var positionHistory = ArrayList<Pair<Int, Int>>()
 
     fun path() {

@@ -44,6 +44,7 @@ class GameManager{
         gameBoard = GameBoard()
         if(level>0){
             gameBoard.setupScene(level)
+            gridPosition = gameBoard.gridPosition
             enemyArray = gameBoard.enemyArray
             foodArray = gameBoard.foodArray
 
@@ -67,8 +68,10 @@ class GameManager{
                 gridPosition.forEachIndexed { i, arrayOfGameObjects ->
                     arrayOfGameObjects.forEachIndexed { j, gameObject ->
                         savePosition[i][j] = GameObject(gameObject)
+                        print("${gameObject.type} ")
                     }
                 }
+                println()
 
                 player = gameBoard.player
 
@@ -201,6 +204,7 @@ class GameManager{
                     val pheromone = pheromoneGrid[toX][toY]
                     val distance = (columns-toX-1) + (rows-toY-1)
 
+                    //val weight = pheromone.pow(wPh)*(1f/distance).pow(wDt)*(1/food).pow(wFd)*(enemy).pow(wEn)
                     val weight = pheromone.pow(wPh)*(1f/distance).pow(wDt)
                     totalWeight += weight
                     weightArray.add(weight)
@@ -245,7 +249,6 @@ class GameManager{
      */
     fun shortest(): Solution {
         while(playerTurn){
-
             val possibleDirection = player.possiblePlayerMovementDirection()
             var potential = 0
             var direction = Pair(0, 0)

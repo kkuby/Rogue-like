@@ -1,4 +1,4 @@
-package agent
+package algorithms
 
 import main.GameManager
 import main.Solution
@@ -7,18 +7,9 @@ class GA {
 
     companion object {
         private const val MUTATION_RATE = 0.05f
-        private val gameManager = GameManager.getInstance()
-
-        @Volatile private var instance: GA? = null
-        @JvmStatic fun getInstance(): GA =
-            instance ?: synchronized(this) {
-                instance ?: GA().also {
-                    instance = it
-                }
-            }
     }
 
-    private fun makePopulation(population: Int, level: Int) : ArrayList<Solution> {
+    private fun makePopulation(population: Int) : ArrayList<Solution> {
         val result = ArrayList<Solution>()
         repeat(population){
             gameManager.gameInit(level)
@@ -27,7 +18,7 @@ class GA {
         return result
     }
 
-    private fun crossover(parent1: Solution, parent2: Solution, level: Int): Pair<Solution, Solution> {
+    private fun crossover(parent1: Solution, parent2: Solution): Pair<Solution, Solution> {
         val ran1 = (0 until parent1.route.size).random()
         val ran2 = (0 until parent2.route.size).random()
         val route1 = ArrayList<Pair<Int, Int>>()
@@ -81,7 +72,7 @@ class GA {
         return direction[ran]
     }
 
-    private fun mutate(solution: Solution, level: Int): Solution {
+    private fun mutate(solution: Solution): Solution {
         val route = ArrayList<Pair<Int, Int>>()
         route.addAll(solution.route)
         route.forEachIndexed { index, pair ->
@@ -94,32 +85,26 @@ class GA {
         return gameManager.exploration(route, level)
     }
 
-    fun ga(population: Int, generation: Int, level: Int) : ArrayList<Solution> {
-        val populationArray = makePopulation(population, level)
-
-        repeat(generation) {
-            val offspringArray = ArrayList<Solution>()
-            while(populationArray.size > offspringArray.size) {
-                val (p1, p2) = selection(populationArray)
-                var (o1, o2) = crossover(p1, p2, level)
-
-                o1 = mutate(o1, level)
-                o2 = mutate(o2, level)
-
+    fun ga(population: Int, generation: Int) : ArrayList<Solution> {
+        val populationArray = makePopulation(population)    //population 수 만큼 랜덤 솔루션 생성
+        repeat(generation) {    //generation 수 만큼 반복
+            val offspringArray = ArrayList<Solution>()  //자손 배열
+            while(populationArray.size > offspringArray.size) { //자손이 부모 만큼 생성 될 때 까지
+                val (p1, p2) = selection(populationArray)   //우수한 부모 토너먼트 선택
+                var (o1, o2) = crossover(p1, p2)    //부모의 교차를 통한 자손 생성
+                o1 = mutate(o1) //자손 변이
+                o2 = mutate(o2)
                 offspringArray.add(o1)
                 offspringArray.add(o2)
             }
             populationArray.addAll(offspringArray)
-
-            evaluation(populationArray)
-
-            repeat(population){
+            evaluation(populationArray) //우수한 순서대로 정렬
+            repeat(population){ //토너먼트 선택
                 populationArray.removeLast()
             }
 
         }
-
-        return populationArray
+        return populationArray  //솔루션
     }
 
 }

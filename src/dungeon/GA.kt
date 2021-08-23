@@ -1,5 +1,0 @@
-package dungeon
-
-class GA {
-
-}

@@ -1,9 +1,10 @@
-import agent.ACO
-import agent.GA
-import agent.Greedy
+import algorithms.ACO
+import algorithms.GA
+import algorithms.Greedy
 import main.GameManager
 import main.GameObject
 import main.Solution
+import main.StageMaker
 
 /**
  * same result validation
@@ -33,7 +34,7 @@ fun pathValidation(path: String) {
         }
     }
 
-    //gameManager.gameInit(LEVEL)
+    gameManager.gameInit(LEVEL)
     val solution = gameManager.routeValidation(route)
     solution.result()
     solution.path()
@@ -154,26 +155,29 @@ fun evaluation(solutionArray: ArrayList<Solution>) {
 }
 
 val gameManager = GameManager.getInstance()
+val stageMaker = StageMaker.getInstance()
 
 const val POPULATION = 80
 const val GENERATION = 20
 const val LEVEL = 5
-fun main() {
+fun main(args: Array<String>) {
 
     //sameResultValidation()
-    //pathValidation("3,4,4,2,2,2,2,2,3,4,2,2,4,4,1,4")
+    //pathValidation("2,3,3,2,2,2,2,2,2,2,2,3,3,1,3,3,3,3,1,3,2,2")
 
-    val ga = GA.getInstance()
+    val ga = GA()
+    ga.ga(POPULATION, GENERATION)
     //evaluation(ga.ga(POPULATION, GENERATION, LEVEL))
 //    evaluation(randomGame())
     val greedy = Greedy()
-    evaluation(greedy.greedy(POPULATION, GENERATION, -1))
+    evaluation(greedy.greedy(POPULATION, GENERATION, LEVEL))
 
-    val aco = ACO.getInstance()
+    val aco = ACO()
+    aco.aco(POPULATION, GENERATION, 14, 8)
     //evaluation(aco.aco(POPULATION, GENERATION, LEVEL))
 
     //make map
-//    evaluation(ga.ga(POPULATION, GENERATION, -1))
+    //evaluation(ga.ga(POPULATION, GENERATION, -1))
 
 //    mapValidation("10 0 2 0 11 0 0 11 0 0 1 0 0 0 0 0 11 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 11 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 11 0 11 0 0 0 0 2 0 0 0 0 0 0 0 1 0 0 0 0 2 0 0 0 0 0 0 11 0 0 0 0 0 0 11 0 0 0 0 0 2 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 100",
 //    "2,2,4,3,3,4,3,1,2,3,2,3,2,1,1,2,3,2,2,2")
